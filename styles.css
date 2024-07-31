@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap");
+
+:root {
+  --bg-color: #444444;
+  --text-color: #fff;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+}
+
+header {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+.navigation-links {
+  display: flex;
+
+  li {
+    padding: 0 1rem;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}
+
+ul {
+  list-style: none;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.countries-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+  width: 80%;
+}
+
+.card-country {
+  background-color: #aaa;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+
+  figure {
+    img {
+      width: 100%;
+      border-radius: 8px 8px 0 0;
+    }
+  }
+
+  .details {
+    padding: 0 1rem 1rem 1rem;
+  }
+}
+
+.search-container {
+  form {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+
+    input {
+      border-radius: 8px;
+      border: none;
+    }
+
+    button {
+      border: none;
+      padding: 0.5rem 1rem;
+      background-color: var(--text-color);
+      color: var(--bg-color);
+      border-radius: 2rem;
+    }
+  }
+}
