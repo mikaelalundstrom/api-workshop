@@ -3,12 +3,12 @@ window.addEventListener("load", () => {
   // Get the url from the window, and get the search value
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const searchTerm = urlParams.get('search');
+  const searchTerm = urlParams.get("search");
 
   enableNav();
   setupSearch();
   if (searchTerm) {
-    const searchContainer = document.querySelector(".search-container"); 
+    const searchContainer = document.querySelector(".search-container");
     searchContainer.classList.remove("d-none");
     const search = document.querySelector("#search");
     search.value = searchTerm;
@@ -16,32 +16,29 @@ window.addEventListener("load", () => {
   fetchCountries(searchTerm)
     .then(displayCountries)
     .catch((error) => console.log(error));
-
-  addToFavorites();
 });
 
 // Adding to favorites
 async function addToFavorites() {
-  const favorites = new Set(JSON.parse(localStorage.getItem("favorites"))) || new Set();
-  let countryList;
-  try {
-    countryList = await fetchCountries();
-  } catch(error) {
-    console.log(error);
-  }
 
-  let favoritesArray = []
+  // Get favorites from localStorage and fetch countryList
+  const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  const countryList = await fetchCountries();
 
   const cards = document.querySelectorAll(".card-country");
-  cards.forEach(card => {
+  cards.forEach((card) => {
     card.addEventListener("click", () => {
-      if (countryList.some(country => String(country.ccn3) === card.dataset.id)) {
-        const findCountry = countryList.find(country => country.ccn3 === card.dataset.id);
 
-        favorites.add(findCountry);
-        favoritesArray = [...favorites];
+      // If the country exists and it's not already in favorites, add it and update favorites
+      if (
+        countryList.some((country) => String(country.ccn3) === card.dataset.id) &&
+        !favorites.some((favorite) => String(favorite.ccn3) === card.dataset.id)
+      ) {
+        const findCountry = countryList.find((country) => country.ccn3 === card.dataset.id);
 
-        localStorage.setItem("favorites", JSON.stringify(favoritesArray));
+        favorites.push(findCountry);
+
+        localStorage.setItem("favorites", JSON.stringify(favorites));
       }
     });
   });
@@ -50,29 +47,37 @@ async function addToFavorites() {
 // Fetch countries from API
 async function fetchCountries(search) {
   try {
-
     let url = "";
+    
     // Fetch and return the data from RESTCountries API
     if (search) {
       url = "https://restcountries.com/v3.1/name/" + search;
-    }
-    else {
+    } else {
       url = "https://restcountries.com/v3.1/all";
     }
     const response = await fetch(url);
+
+    // If it's a bad request throw error to move to error handler
+    if (response.status !== 200) {
+      throw new Error();
+    }
+
     const data = await response.json();
     return data;
-    
   } catch (error) {
     console.log(error);
 
     // Construct error card if promise was rejected
-    error = [{
-      flags: {png: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/505px-FullMoon2010.jpg"},
-      name: {common: "Out of this world"},
-      region: "solar system",
-      population: 0,
-    }];
+    error = [
+      {
+        flags: {
+          png: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/505px-FullMoon2010.jpg",
+        },
+        name: { common: "Out of this world" },
+        region: "solar system",
+        population: 0,
+      },
+    ];
 
     return error;
   }
@@ -152,11 +157,11 @@ function createLi(string) {
 
 // Enabling navigation links (showing / hiding the search from)
 function enableNav() {
-  const searchContainer = document.querySelector(".search-container"); 
+  const searchContainer = document.querySelector(".search-container");
   const favoritesContainer = document.querySelector(".favorites-container");
   const navLinks = document.querySelectorAll(".navigation-links > li");
 
-  navLinks.forEach(link => {
+  navLinks.forEach((link) => {
     link.addEventListener("click", (event) => {
       if (event.target.id === "home-link") {
         searchContainer.classList.add("d-none");
