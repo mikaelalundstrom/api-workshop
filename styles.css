@@ -1,8 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap");
 
 :root {
-  --bg-color: #444444;
+  --bg-color: #1a1a1a;
   --text-color: #fff;
+  --card-bg: #aaa;
 }
 
 * {
@@ -77,15 +78,33 @@ main {
 }
 
 .card-country {
-  background-color: #aaa;
+  background-color: var(--card-bg);
   border-radius: 8px;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  position: relative;
+
+  &:hover:before {
+    content: "Click to add favorite";
+    position: absolute;
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    text-align: center;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    font-weight: 600;
+    font-size: 2rem;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   & figure {
 
     & img {
-      /* width: 100%;
-      border-radius: 8px 8px 0 0; */
       width: 100%;
       border-radius: 8px 8px 0 0;
       object-fit: scale-down;

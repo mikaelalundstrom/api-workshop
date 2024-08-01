@@ -16,7 +16,36 @@ window.addEventListener("load", () => {
   fetchCountries(searchTerm)
     .then(displayCountries)
     .catch((error) => console.log(error));
+
+  addToFavorites();
 });
+
+// Adding to favorites
+async function addToFavorites() {
+  const favorites = new Set(JSON.parse(localStorage.getItem("favorites"))) || new Set();
+  let countryList;
+  try {
+    countryList = await fetchCountries();
+  } catch(error) {
+    console.log(error);
+  }
+
+  let favoritesArray = []
+
+  const cards = document.querySelectorAll(".card-country");
+  cards.forEach(card => {
+    card.addEventListener("click", () => {
+      if (countryList.some(country => String(country.ccn3) === card.dataset.id)) {
+        const findCountry = countryList.find(country => country.ccn3 === card.dataset.id);
+
+        favorites.add(findCountry);
+        favoritesArray = [...favorites];
+
+        localStorage.setItem("favorites", JSON.stringify(favoritesArray));
+      }
+    });
+  });
+}
 
 // Fetch countries from API
 async function fetchCountries(search) {
@@ -61,6 +90,8 @@ function displayCountries(countries) {
     const card = createCard(country);
     countriesGrid.appendChild(card);
   });
+
+  addToFavorites();
 }
 
 // Function to clear results before rendering new ones
@@ -74,6 +105,7 @@ function clearCountries(node) {
 function createCard(countryObj) {
   const card = document.createElement("article");
   card.classList.add("card-country");
+  card.dataset.id = countryObj.ccn3;
   const figure = document.createElement("figure");
   const img = document.createElement("img");
 
@@ -121,14 +153,21 @@ function createLi(string) {
 // Enabling navigation links (showing / hiding the search from)
 function enableNav() {
   const searchContainer = document.querySelector(".search-container"); 
+  const favoritesContainer = document.querySelector(".favorites-container");
   const navLinks = document.querySelectorAll(".navigation-links > li");
 
   navLinks.forEach(link => {
     link.addEventListener("click", (event) => {
       if (event.target.id === "home-link") {
         searchContainer.classList.add("d-none");
+        favoritesContainer.classList.add("d-none");
       } else if (event.target.id === "search-link") {
         searchContainer.classList.remove("d-none");
+        favoritesContainer.classList.add("d-none");
+      } else if (event.target.id === "favorites-link") {
+        searchContainer.classList.add("d-none");
+        favoritesContainer.classList.remove("d-none");
+        displayCountries(JSON.parse(localStorage.getItem("favorites")));
       }
     });
   });
@@ -137,7 +176,7 @@ function enableNav() {
 // Setup the search form
 function setupSearch() {
   const search = document.querySelector("#search");
-  
+
   // Block to prevent fetch too often.
   let block = false;
 
