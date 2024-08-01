@@ -19,6 +19,10 @@ body {
   background-color: var(--bg-color);
 }
 
+.d-none {
+  display: none;
+}
+
 header {
   background-color: var(--text-color);
   color: var(--bg-color);
@@ -31,14 +35,24 @@ header {
 .navigation-links {
   display: flex;
 
-  li {
+  & li {
     padding: 0 1rem;
 
-    &:hover {
+    &:hover, .active {
       text-decoration: underline;
       cursor: pointer;
     }
   }
+
+  & a {
+    text-decoration: none;
+    color: var(--bg-color);
+
+    &:hover, .active {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+}
 }
 
 ul {
@@ -49,15 +63,17 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
+  padding: 4rem 0;
 }
 
 .countries-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   gap: 1.5rem;
-  margin-top: 3rem;
+  
   width: 80%;
+
 }
 
 .card-country {
@@ -65,10 +81,16 @@ main {
   border-radius: 8px;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
 
-  figure {
-    img {
+  & figure {
+
+    & img {
+      /* width: 100%;
+      border-radius: 8px 8px 0 0; */
       width: 100%;
       border-radius: 8px 8px 0 0;
+      object-fit: scale-down;
+      object-position: center;
+      height: 200px;
     }
   }
 
@@ -78,17 +100,19 @@ main {
 }
 
 .search-container {
-  form {
+  text-align: center;
+  & form {
     display: flex;
     gap: 1rem;
     margin: 1rem 0;
 
-    input {
+    & input {
       border-radius: 8px;
       border: none;
+      padding: 0.5rem;
     }
 
-    button {
+    & button {
       border: none;
       padding: 0.5rem 1rem;
       background-color: var(--text-color);
